@@ -50,4 +50,4 @@ The `src/models` folder should contain code for training a model and saving it t
 The `src/visualization` folder should contain code for generating figures/plots and saving them to `reports/figures`.
 
 ## Authors
-August Semrau Andersen, Sunniva Olsrud Punsvik, Søren Winkel Holm, and William Diedrichsen Marstrand.
+August Semrau Andersen, Gustav Gamst Larsen, and William Diedrichsen Marstrand.
