@@ -1,5 +1,4 @@
 import os
-import shutil
 from tqdm import tqdm
 import requests as req
 from zipfile import ZipFile 
