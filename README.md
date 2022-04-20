@@ -13,11 +13,22 @@ in the root folder to install the dependencies to your environment.
 If new pip dependencies are added to the project update the `requirements.txt` file with the dependencies **and the dependency version** to make sure everyone is using the same pip packages and versions to avoid errors.
 
 ## Data
-The image data is ignored through the `.gitignore`, but can be downloaded automatically by running the `make_data.py` script in the folder `src/data`.
+The image data is ignored through the `.gitignore`, but can be downloaded automatically by running 
+```
+python make_data.py
+```
+using the script in the folder `src/data`.
 <br><br>
 Otherwise the data can manually be downloaded from [here](http://www2.imm.dtu.dk/courses/02506/data/EM_ISBI_Challenge.zip).
 <br>
 Then unzip the data and place the contents in the `data/raw` folder.
+
+### Creating Image Patches
+To generate image patches and patch labels run the script
+```
+python make_image_patches.py
+```
+in the folder `src/features`.
 
 ## Repository Structure
 The structure of this repo follows the [Cookiecutter Data Science Template](https://drivendata.github.io/cookiecutter-data-science/#directory-structure).
