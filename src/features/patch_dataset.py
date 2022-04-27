@@ -1,4 +1,5 @@
 import os
+from torchvision import io
 from torch.utils.data import Dataset
 
 class TrainPatchData(Dataset):
@@ -11,4 +12,4 @@ class TrainPatchData(Dataset):
         return len(self.input_files)
     
     def __getitem__(self, i):
-        return self.input_files[i], self.target_files[i]
+        return io.read_image(self.input_files[i]), io.read_image(self.target_files[i])
