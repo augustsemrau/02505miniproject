@@ -6,14 +6,14 @@ format:
 	isort src
 
 install:
-	pip install -r requirements.txt
+	pip3 install -r requirements.txt
 
 dataset:
-	python src/data/make_data.py
-	python src/data/make_image_patches.py --patch_size 256
-	python src/data/make_image_patches.py --patch_size 128
-	python src/data/make_image_patches.py --patch_size 64
-	python src/data/make_image_patches.py --patch_size 32
+	python3 src/data/make_data.py
+	python3 src/data/make_image_patches.py --patch_size 256
+	python3 src/data/make_image_patches.py --patch_size 128
+	python3 src/data/make_image_patches.py --patch_size 64
+	python3 src/data/make_image_patches.py --patch_size 32
 
 ## Delete all compiled Python files
 clean:
