@@ -30,7 +30,7 @@ class DiceLoss(nn.Module):
         return 1. - dsc
 
 
-def train_model(model, optimizer, num_epochs, train_dataset, val_dataset, CUDA=False, SAVE_CHECKPOINTS=False):
+def train_model(model, optimizer, num_epochs, train_dataset, val_dataset, CUDA=False, SAVE_CHECKPOINTS=False, size=512):
     
     ## Seed training run
     seed = 42
@@ -38,7 +38,7 @@ def train_model(model, optimizer, num_epochs, train_dataset, val_dataset, CUDA=F
     np.random.seed(seed)
 
     ## Init grad (???)
-    x = torch.autograd.Variable(torch.FloatTensor(np.random.random((1, 1, 512, 512))))
+    x = torch.autograd.Variable(torch.FloatTensor(np.random.random((1, 1, size, size))))
 
     ## Save loss for plot
     training_loss=[]
