@@ -4,7 +4,7 @@ from loss import DiceLoss
 import torch
 import numpy as np
 from datetime import datetime
-import tqdm
+from tqdm import tqdm
 
 def train_model(model, optimizer, num_epochs, train_dataset, val_dataset, CUDA=False, SAVE_CHECKPOINTS=False):
     
@@ -38,7 +38,7 @@ def train_model(model, optimizer, num_epochs, train_dataset, val_dataset, CUDA=F
         model.eval()
 
         ## For grid in validation set
-        for inputs, targets in val_dataset:
+        for inputs, targets in tqdm(val_dataset):
 
             inputs=inputs.unsqueeze(0)
             targets=targets.unsqueeze(0)
@@ -59,7 +59,7 @@ def train_model(model, optimizer, num_epochs, train_dataset, val_dataset, CUDA=F
             
         model.train()
         # For grid in traning set
-        for inputs,targets in train_dataset:
+        for inputs,targets in tqdm(train_dataset):
             inputs=inputs.unsqueeze(0)
             targets=targets.unsqueeze(0)
             # Add channel
@@ -95,14 +95,16 @@ def train_model(model, optimizer, num_epochs, train_dataset, val_dataset, CUDA=F
             # Send dict to memory
             torch.save(model.state_dict(), model_name)
             
-        # Early breaking if validationloss increases 3 times
-        if len(validation_loss)>3:
-            if (validation_loss[-1]>=validation_loss[-2]) and (validation_loss[-1]>=validation_loss[-3]) and (validation_loss[-1]>=validation_loss[-4]):
-                break
         # Save loss for plot
         training_loss.append(epoch_training_loss)
         validation_loss.append(epoch_validation_loss)
-        print(f"Epoch {epoch}\nTraning loss: {epoch_training_loss}\nValidation loss {epoch_validation_loss}")
+
+        # # Early breaking if validationloss increases 3 times
+        # if len(validation_loss)>3:
+        #     if (validation_loss[-1]>=validation_loss[-2]) and (validation_loss[-1]>=validation_loss[-3]) and (validation_loss[-1]>=validation_loss[-4]):
+        #         break
+
+        print(f"Traning loss: {epoch_training_loss}\nValidation loss {epoch_validation_loss}")
 
     return model, training_loss, validation_loss, global_steps
 
