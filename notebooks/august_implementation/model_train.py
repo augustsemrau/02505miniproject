@@ -99,10 +99,10 @@ def train_model(model, optimizer, num_epochs, train_dataset, val_dataset, CUDA=F
         training_loss.append(epoch_training_loss)
         validation_loss.append(epoch_validation_loss)
 
-        # # Early breaking if validationloss increases 3 times
-        # if len(validation_loss)>3:
-        #     if (validation_loss[-1]>=validation_loss[-2]) and (validation_loss[-1]>=validation_loss[-3]) and (validation_loss[-1]>=validation_loss[-4]):
-        #         break
+        # Early breaking if validationloss increases 3 times
+        if len(validation_loss)>3:
+            if (validation_loss[-1]>=validation_loss[-2]) and (validation_loss[-1]>=validation_loss[-3]) and (validation_loss[-1]>=validation_loss[-4]):
+                break
 
         print(f"Traning loss: {epoch_training_loss}\nValidation loss {epoch_validation_loss}")
 
