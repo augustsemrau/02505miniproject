@@ -3,12 +3,12 @@ from tqdm import tqdm
 import requests as req
 from zipfile import ZipFile 
 
-ZIP_FILE_NAME = 'EM_ISBI_Challenge.zip'
+IMG_DIR = 'EM_ISBI_Challenge'
+ZIP_FILE_NAME = f'{IMG_DIR}.zip'
 FILE_URI = f'http://www2.imm.dtu.dk/courses/02506/data/{ZIP_FILE_NAME}'
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 ZIP_FILE_PATH = os.path.join(BASE_PATH, '..', '..', 'data', 'raw', ZIP_FILE_NAME)
 EXTRACT_PATH = os.path.join(BASE_PATH, '..', '..', 'data', 'raw')
-
 
 def get_data():
     print('Downloading EM ISBI Challange data...')
@@ -36,4 +36,8 @@ def get_data():
     print('Data created sucessfully!')
 
 if __name__ == '__main__':
-    get_data()
+    data_dir = os.path.join(EXTRACT_PATH, IMG_DIR)
+    if not os.path.exists(data_dir):
+        get_data()
+    else:
+        print(f'Data dir {data_dir} already exsits')
