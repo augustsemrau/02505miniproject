@@ -10,10 +10,10 @@ install:
 
 dataset:
 	python src/data/make_data.py
+	python src/data/make_image_patches.py --patch_size 256
 	python src/data/make_image_patches.py --patch_size 128
 	python src/data/make_image_patches.py --patch_size 64
 	python src/data/make_image_patches.py --patch_size 32
-	python src/data/make_image_patches.py --patch_size 16
 
 ## Delete all compiled Python files
 clean:
