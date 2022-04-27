@@ -1,13 +1,9 @@
-from importlib.resources import path
 import os
-from pydoc import describe
-from requests import patch
 from tqdm import tqdm
+from torchvision import io
 from argparse import ArgumentParser
-from torchvision import io, transforms
 from torchvision.transforms.functional import to_pil_image
 
-IMG_SIZE = 256
 FILE_DIR = os.path.abspath(os.path.dirname(__file__))
 TRAIN_DIR = os.path.join(FILE_DIR, '..', '..', 'data', 'raw', 'EM_ISBI_Challenge', 'train_images')
 TEST_DIR = os.path.join(FILE_DIR, '..', '..', 'data', 'raw', 'EM_ISBI_Challenge', 'test_images')
@@ -40,11 +36,12 @@ def create_patches(img_dir, save_dir, patch_size):
     :param save_dir:    Path to directory in which to save the image patches
     :param patch_size:  Size of the (patch_size X patch_size) patch which the image should be split into
     '''
-    resize = transforms.Resize((IMG_SIZE, IMG_SIZE))
     img_files = sorted([file for file in os.listdir(img_dir) if file.endswith('.png')])
 
     for img_file in tqdm(img_files):
-        img = resize(io.read_image(os.path.join(img_dir, img_file)))
+        file_path = os.path.join(img_dir, img_file)
+        img = io.read_image(file_path)
+        img_name = os.path.splitext(os.path.basename(file_path))[0]
         patches = img.unfold(1, patch_size, patch_size).unfold(2, patch_size, patch_size)
 
         patch_num = 1
@@ -52,7 +49,7 @@ def create_patches(img_dir, save_dir, patch_size):
             for j in range(patches.shape[2]):
                 patch = patches[:,i,j]
                 pil_img = to_pil_image(patch)
-                pil_img.save(os.path.join(save_dir, f'{img_file}_{patch_num}.png'))
+                pil_img.save(os.path.join(save_dir, f'{img_name}_{patch_num}.png'))
                 patch_num += 1
 
 
