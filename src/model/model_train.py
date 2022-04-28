@@ -15,6 +15,8 @@ class DiceLoss(nn.Module):
         """
         Returns 1.0 - Dice coefficient = loss
         """
+        # print(y_pred)
+        # print(y_true)
         assert y_pred.size() == y_true.size()
         
         ## Convert to 1D vector
@@ -113,11 +115,11 @@ def train_model(model, optimizer, num_epochs, train_dataset, val_dataset, CUDA=F
             # Step taken
             global_steps+=1
             
-        ## Save every epoch
-        if SAVE_CHECKPOINTS:
-            model_name=f'./checkpoint_saves/{type(model).__name__}_checkpoint_epoch_{epoch}_{datetime.now()}'
-            # Send dict to memory
-            torch.save(model.state_dict(), model_name)
+        # ## Save every epoch
+        # if SAVE_CHECKPOINTS:
+        #     model_name=f'/home/augustsemrau/drive/M1semester/02506_AdvancedImageAnalysis/02505miniproject/src/model/saved_models/{type(model).__name__}_checkpoint_epoch_{epoch}_size_{size}.pt'
+        #     # Send dict to memory
+        #     torch.save(model.state_dict(), model_name)
             
         # Save loss for plot
         training_loss.append(epoch_training_loss)
@@ -126,10 +128,16 @@ def train_model(model, optimizer, num_epochs, train_dataset, val_dataset, CUDA=F
         # Early breaking if validationloss increases 3 times
         if len(validation_loss)>3:
             if (validation_loss[-1]>=validation_loss[-2]) and (validation_loss[-1]>=validation_loss[-3]) and (validation_loss[-1]>=validation_loss[-4]):
+                model_name=f'/home/augustsemrau/drive/M1semester/02506_AdvancedImageAnalysis/02505miniproject/src/model/saved_models/{type(model).__name__}_checkpoint_epoch_{epoch}_size_{size}.pt'
+                # Send dict to memory
+                torch.save(model.state_dict(), model_name)
                 break
 
         print(f"Traning loss: {epoch_training_loss}\nValidation loss {epoch_validation_loss}")
-
+    
+    model_name=f'/home/augustsemrau/drive/M1semester/02506_AdvancedImageAnalysis/02505miniproject/src/model/saved_models/{type(model).__name__}_checkpoint_epoch_last_size_{size}.pt'
+    # Send dict to memory
+    torch.save(model.state_dict(), model_name)
     return model, training_loss, validation_loss, global_steps
 
 
