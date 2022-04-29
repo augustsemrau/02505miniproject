@@ -1,8 +1,8 @@
-import torch.nn as nn
+import os
 import torch
 import numpy as np
-from datetime import datetime
 from tqdm import tqdm
+import torch.nn as nn
 
 
 class DiceLoss(nn.Module):
@@ -32,7 +32,7 @@ class DiceLoss(nn.Module):
         return 1. - dsc
 
 
-def train_model(model, optimizer, num_epochs, train_dataset, val_dataset, CUDA=False, SAVE_CHECKPOINTS=False, size=512):
+def train_model(model, model_name, optimizer, num_epochs, train_dataset, val_dataset, CUDA=False, SAVE_CHECKPOINTS=False, size=512):
     
     ## Seed training run
     seed = 42
@@ -124,9 +124,9 @@ def train_model(model, optimizer, num_epochs, train_dataset, val_dataset, CUDA=F
         # Save loss for plot
         training_loss.append(epoch_training_loss)
         validation_loss.append(epoch_validation_loss)
-        model_name=f'/home/augustsemrau/drive/M1semester/02506_AdvancedImageAnalysis/02505miniproject/src/model/saved_models/{type(model).__name__}_checkpoint_epoch_{epoch}_size_{size}.pt'
         # Send dict to memory
-        torch.save(model.state_dict(), model_name)
+        model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '..', 'models', f'{model_name}_checkpoint_epoch_{epoch}_size_{size}.pt')
+        torch.save(model.state_dict(), model_path)
 
         # Early breaking if validationloss increases 3 times
         if len(validation_loss)>3:
@@ -135,15 +135,7 @@ def train_model(model, optimizer, num_epochs, train_dataset, val_dataset, CUDA=F
 
         print(f"Traning loss: {epoch_training_loss}\nValidation loss {epoch_validation_loss}")
     
-    model_name=f'/home/augustsemrau/drive/M1semester/02506_AdvancedImageAnalysis/02505miniproject/src/model/saved_models/{type(model).__name__}_checkpoint_epoch_last_size_{size}.pt'
+    model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '..', 'models', f'{model_name}_checkpoint_epoch_last_size_{size}.pt')
     # Send dict to memory
-    torch.save(model.state_dict(), model_name)
+    torch.save(model.state_dict(), model_path)
     return model, training_loss, validation_loss, global_steps
-
-
-
-    
-
-
-
-

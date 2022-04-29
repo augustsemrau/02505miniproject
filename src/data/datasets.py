@@ -1,12 +1,20 @@
-import torch
-import glob 
 import os
 import cv2
+import glob 
+import torch
 import random
 import numpy as np
 from PIL import Image
 import torchvision.transforms as transforms
 from src.features.image_augmentation import elastic, add_noise, shear, rotate, zoom
+
+IMG_FOLDER = 'EM_ISBI_Challenge'
+RAW_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '..', 'data', 'raw')
+TRAIN_DATA_PATH = os.path.join(RAW_DATA_PATH, IMG_FOLDER, 'train_images')
+LABEL_DATA_PATH = os.path.join(RAW_DATA_PATH, IMG_FOLDER, 'train_labels')
+TEST_DATA_PATH = os.path.join(RAW_DATA_PATH, IMG_FOLDER, 'test_images')
+
+PROCESSED_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '..', 'data', 'processed')
 
 def set_seed(seed: int):
     torch.manual_seed(seed)
@@ -21,10 +29,10 @@ class Dataset(torch.utils.data.Dataset):
         self._transform = transforms.Compose([transforms.ToTensor()])
 
         if self._train:
-            image_dir = "data/raw/EM_ISBI_Challenge/train_images"
-            label_dir = "data/raw/EM_ISBI_Challenge/train_labels"
+            image_dir = TRAIN_DATA_PATH 
+            label_dir = LABEL_DATA_PATH
         else:
-            image_dir = "data/raw/EM_ISBI_Challenge/test_images"
+            image_dir = TEST_DATA_PATH
 
         self.image_paths = sorted(glob.glob(os.path.join(image_dir, "*.png")))
         self.label_paths = sorted(glob.glob(os.path.join(label_dir, "*.png"))) if self._train else None
@@ -77,10 +85,10 @@ class DatasetPatch(torch.utils.data.Dataset):
         self._transform = transforms.Compose([transforms.ToTensor()])
         
         if self._train:
-            image_dir = f"data/processed/{self._size}_train_patches"
-            label_dir = f"data/processed/{self._size}_label_patches"
+            image_dir = os.path.join(PROCESSED_DATA_PATH, f"{self._size}_train_patches")
+            label_dir = os.path.join(PROCESSED_DATA_PATH, f"{self._size}_label_patches")
         else:
-            image_dir = f"data/processed/{self._size}_test_patches"
+            image_dir = os.path.join(PROCESSED_DATA_PATH, f"{self._size}_test_patches")
 
         self.image_paths = sorted(glob.glob(os.path.join(image_dir, "*.png")))
         self.label_paths = sorted(glob.glob(os.path.join(label_dir, "*.png"))) if self._train else None
