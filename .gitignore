@@ -770,6 +770,7 @@ $RECYCLE.BIN/
 
 data/raw/**
 data/processed/**
+models/**
 
 # Keep the .gitkeep files
 !data/raw/.gitkeep
