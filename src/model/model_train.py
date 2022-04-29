@@ -32,7 +32,7 @@ class DiceLoss(nn.Module):
         return 1. - dsc
 
 
-def train_model(model, model_name, optimizer, num_epochs, train_dataset, val_dataset, CUDA=False, SAVE_CHECKPOINTS=False, size=512):
+def train_model(model, model_name, optimizer, num_epochs, train_dataset, val_dataset, CUDA=False, SAVE_CHECKPOINTS=False, size=512, depth=3):
     
     ## Seed training run
     seed = 42
@@ -66,15 +66,15 @@ def train_model(model, model_name, optimizer, num_epochs, train_dataset, val_dat
         ## For grid in validation set
         for inputs, targets in tqdm(val_dataset):
 
-            inputs=inputs.unsqueeze(0)
-            targets=targets.unsqueeze(0)
+            inputs=inputs.unsqueeze(0).float()
+            targets=targets.unsqueeze(0).float()
             # Add channel
             if CUDA:
                 inputs = inputs.cuda()
                 targets = targets.cuda()
 
             # Forward pass to get output/logits
-            y_hat = model(x)
+            y_hat = model(inputs)
             
             # Calculate Loss: softmax --> cross entropy loss
             # outputs shifts channel one place left
@@ -86,15 +86,15 @@ def train_model(model, model_name, optimizer, num_epochs, train_dataset, val_dat
         model.train()
         # For grid in traning set
         for inputs,targets in tqdm(train_dataset):
-            inputs=inputs.unsqueeze(0)
-            targets=targets.unsqueeze(0)
+            inputs=inputs.unsqueeze(0).float()
+            targets=targets.unsqueeze(0).float()
             # Add channel
             if CUDA:
                 inputs = inputs.cuda()
                 targets = targets.cuda()
 
             # Forward pass to get output/logits
-            y_hat = model(x)
+            y_hat = model(inputs)
             
             # Calculate Loss: softmax --> cross entropy loss
             # outputs shifts channel one place left
@@ -125,7 +125,7 @@ def train_model(model, model_name, optimizer, num_epochs, train_dataset, val_dat
         training_loss.append(epoch_training_loss)
         validation_loss.append(epoch_validation_loss)
         # Send dict to memory
-        model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '..', 'models', f'{model_name}_checkpoint_epoch_{epoch}_size_{size}.pt')
+        model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '..', 'models', f'{model_name}_depth{depth}_checkpoint_epoch_{epoch}_size_{size}.pt')
         torch.save(model.state_dict(), model_path)
 
         # Early breaking if validationloss increases 3 times
@@ -135,7 +135,7 @@ def train_model(model, model_name, optimizer, num_epochs, train_dataset, val_dat
 
         print(f"Traning loss: {epoch_training_loss}\nValidation loss {epoch_validation_loss}")
     
-    model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '..', 'models', f'{model_name}_checkpoint_epoch_last_size_{size}.pt')
+    model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '..', 'models', f'{model_name}_depth{depth}_checkpoint_epoch_last_size_{size}.pt')
     # Send dict to memory
     torch.save(model.state_dict(), model_path)
     return model, training_loss, validation_loss, global_steps
